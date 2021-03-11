@@ -44,29 +44,15 @@ class Delimiter {
    */
   constructor({data, config, api}) {
     this.api = api;
-
-    this._CSS = {
-      block: this.api.styles.block,
-      wrapper: 'ce-delimiter'
-    };
-
-    this._data = {};
-    this._element = this.drawView();
-
+    this.config = config;
     this.data = data;
-  }
-
-  /**
-   * Create Tool's view
-   * @return {HTMLElement}
-   * @private
-   */
-  drawView() {
-    let div = document.createElement('DIV');
-
-    div.classList.add(this._CSS.wrapper, this._CSS.block);
-
-    return div;
+    
+    if (config.view) {
+      this.element = config.view({
+        editorConfig: config,
+        editorData: data
+      });
+    }
   }
 
   /**
@@ -75,7 +61,7 @@ class Delimiter {
    * @public
    */
   render() {
-    return this._element;
+    return this.element;
   }
 
   /**
@@ -84,8 +70,28 @@ class Delimiter {
    * @returns {DelimiterData} - saved data
    * @public
    */
-  save(toolsContent) {
-    return {};
+  save(element) {
+    if (this.config.save) {
+      return this.config.save({
+        editorConfig: this.config,
+        editorData: this.data,
+        editorElement: element
+      });
+    } else {
+      return {};
+    }
+  }
+
+  validate(savedData){
+    if (this.config.validate) {
+      return this.config.validate({
+        editorConfig: this.config,
+        editorData: savedData,
+        editorElement: this.element
+      })
+    }
+
+    return true;
   }
 
   /**
