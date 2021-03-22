@@ -43,16 +43,10 @@ class Delimiter {
    *   api - Editor.js API
    */
   constructor({data, config, api}) {
+    this.id = Math.random().toString(36).substr(2, 9);
     this.api = api;
     this.config = config;
     this.data = data;
-    
-    if (config.view) {
-      this.element = config.view({
-        editorConfig: config,
-        editorData: data
-      });
-    }
   }
 
   /**
@@ -61,7 +55,11 @@ class Delimiter {
    * @public
    */
   render() {
-    return this.element;
+    return this.config.view({
+      pluginId: this.id,
+      pluginData: data,
+      pluginUserConfig: config
+    });
   }
 
   /**
@@ -73,9 +71,10 @@ class Delimiter {
   save(element) {
     if (this.config.save) {
       return this.config.save({
-        editorConfig: this.config,
-        editorData: this.data,
-        editorElement: element
+        pluginId: this.id,
+        pluginUserConfig: this.config,
+        pluginData: this.data,
+        pluginElement: element
       });
     } else {
       return {};
@@ -85,9 +84,10 @@ class Delimiter {
   validate(savedData){
     if (this.config.validate) {
       return this.config.validate({
-        editorConfig: this.config,
-        editorData: savedData,
-        editorElement: this.element
+        pluginId: this.id,
+        pluginUserConfig: this.config,
+        pluginData: savedData,
+        pluginLastData: this.data
       })
     }
 
