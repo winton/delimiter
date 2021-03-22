@@ -57,8 +57,8 @@ class Delimiter {
   render() {
     return this.config.view({
       pluginId: this.id,
-      pluginData: data,
-      pluginUserConfig: config
+      pluginData: this.data,
+      pluginUserConfig: this.config
     });
   }
 
