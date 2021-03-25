@@ -47,6 +47,14 @@ class Delimiter {
     this.api = api;
     this.config = config;
     this.data = data;
+    
+    if (this.config.initialize) {
+      this.config.initialize({
+        pluginId: this.id,
+        pluginData: this.data,
+        pluginUserConfig: this.config
+      });
+    }
   }
 
   /**
