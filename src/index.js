@@ -47,10 +47,11 @@ class Delimiter {
     this.api = api;
     this.config = config;
     this.data = data;
-    
+
     if (this.config.initialize) {
       this.config.initialize({
         pluginId: this.id,
+        pluginApi: this.api,
         pluginData: this.data,
         pluginUserConfig: this.config
       });
@@ -65,6 +66,7 @@ class Delimiter {
   render() {
     return this.config.view({
       pluginId: this.id,
+      pluginApi: this.api,
       pluginData: this.data,
       pluginUserConfig: this.config
     });
@@ -80,6 +82,7 @@ class Delimiter {
     if (this.config.save) {
       return this.config.save({
         pluginId: this.id,
+        pluginApi: this.api,
         pluginUserConfig: this.config,
         pluginData: this.data,
         pluginElement: element
@@ -93,6 +96,7 @@ class Delimiter {
     if (this.config.validate) {
       return this.config.validate({
         pluginId: this.id,
+        pluginApi: this.api,
         pluginUserConfig: this.config,
         pluginData: savedData,
         pluginLastData: this.data
