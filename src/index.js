@@ -48,11 +48,21 @@ class Delimiter {
     this.config = config;
     this.data = data;
 
+    /**
+     * When block is only constructing,
+     * current block points to previous block.
+     * So real block index will be +1 after rendering
+     * @todo place it at the `rendered` event hook to get real block index without +1;
+     * @type {number}
+     */
+     this.blockIndex = this.api.blocks.getCurrentBlockIndex() + 1;
+
     if (this.config.initialize) {
       this.config.initialize({
         pluginId: this.id,
         pluginApi: this.api,
         pluginData: this.data,
+        pluginBlockIndex: this.blockIndex,
         pluginUserConfig: this.config
       });
     }
@@ -64,12 +74,17 @@ class Delimiter {
    * @public
    */
   render() {
-    return this.config.view({
-      pluginId: this.id,
-      pluginApi: this.api,
-      pluginData: this.data,
-      pluginUserConfig: this.config
-    });
+    try {
+      return this.config.view({
+        pluginId: this.id,
+        pluginApi: this.api,
+        pluginData: this.data,
+        pluginBlockIndex: this.blockIndex,
+        pluginUserConfig: this.config
+      });
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   /**
@@ -83,8 +98,9 @@ class Delimiter {
       return this.config.save({
         pluginId: this.id,
         pluginApi: this.api,
-        pluginUserConfig: this.config,
         pluginData: this.data,
+        pluginBlockIndex: this.blockIndex,
+        pluginUserConfig: this.config,
         pluginElement: element
       });
     } else {
@@ -97,8 +113,9 @@ class Delimiter {
       return this.config.validate({
         pluginId: this.id,
         pluginApi: this.api,
-        pluginUserConfig: this.config,
         pluginData: savedData,
+        pluginBlockIndex: this.blockIndex,
+        pluginUserConfig: this.config,
         pluginLastData: this.data
       })
     }
